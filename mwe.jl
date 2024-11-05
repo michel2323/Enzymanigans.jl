@@ -17,8 +17,7 @@ function loop(body::Function, model)
     return model
 end
 
-function augmented_primal(config, func::Const{typeof(loop)}, ret, body, model,
-)
+function augmented_primal(config, func::Const{typeof(loop)}, ret, body, model)
     func.val(body.val, model.val)
     return AugmentedReturn(nothing, nothing, nothing)
 end
@@ -28,11 +27,7 @@ function reverse(config, ::Const{typeof(loop)}, dret::Type{<:Const}, tape, body,
     return (nothing, nothing)
 end
 
-function rev_loop(
-    body::Function,
-    model::MT,
-    shadowmodel::MT,
-) where {MT}
+function rev_loop(body::Function, model::Model, shadowmodel::Model) 
     body(model)
     Enzyme.autodiff(Reverse, Const(body), Duplicated(model, shadowmodel))
 end
